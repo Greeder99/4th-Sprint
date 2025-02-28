@@ -41,7 +41,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 // steps int — количество совершенных действий (число шагов при ходьбе и беге).
 func distance(steps int) float64 {
 	// ваш код ниже
-	dist := float64(steps) * lenStep / float64(mInKm)
+	dist := float64(steps) * lenStep / mInKm
 	return dist
 }
 
@@ -71,8 +71,7 @@ func TrainingInfo(data string, weight, height float64) string {
 	// ваш код ниже
 	steps, activity, duration, err := parseTraining(data)
 	if err != nil {
-		fmt.Println(err)
-		return ""
+		return err.Error()
 	}
 	switch activity {
 	case "Бег":
@@ -129,6 +128,10 @@ const (
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) float64 {
 	// ваш код здесь
 	meanSpeed := meanSpeed(steps, duration)
+	if height == 0 {
+		fmt.Println("divide by 0")
+		return 0
+	}
 	calories := ((walkingCaloriesWeightMultiplier * weight) + (meanSpeed*meanSpeed/height)*walkingSpeedHeightMultiplier) * duration.Hours() * minInH
 	return calories
 }
